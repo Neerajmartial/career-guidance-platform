@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Instructions</title>
+  <link rel="stylesheet" href="instructions.css">
+</head>
+<body>
+
+  <!-- Instructions Page -->
+  <div class="container">
+    <h1>Test Instructions</h1>
+    <div class="instructions-box">
+      <ul>
+        <li><strong>Test Type:</strong> Multiple Choice Questions (MCQs)</li>
+        <li><strong>Marks per Question:</strong> 2 marks</li>
+        <li><strong>No Negative Marking:</strong> Choose confidently without worrying about penalties.</li>
+        <li><strong>Duration:</strong> 30 minutes</li>
+        <li><strong>Instructions:</strong> Read each question carefully and select the correct option.</li>
+        <li><strong>Important:</strong> Once you start the test, you cannot return to previous questions.</li>
+      </ul>
+    </div>
+    <button onclick="startTestPage()">Start Test</button>
+  </div>
+
+  <script>
+    function startTestPage() {
+      const subject = sessionStorage.getItem('selectedSubject');
+      if (!subject) {
+        alert('No subject selected!');
+        return;
+      }
+      window.location.href = `quiz.html?subject=${subject}`;
+    }
+  </script>
+  
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .profile-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .quiz-history {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .quiz-history h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .score-high {
+            background: #27ae60;
+        }
+
+        .score-medium {
+            background: #f39c12;
+        }
+
+        .score-low {
+            background: #e74c3c;
+        }
+
+        .actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .no-history {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <h1>Welcome, <span id="username">User</span></h1>
+            <p id="userEmail"></p>
+        </div>
+
+        <div class="quiz-history">
+            <h2>Quiz History</h2>
+            <div id="historyContent">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Score</th>
+                            <th>Career Path</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History items will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="button" onclick="window.location.href='mainweb.html'">Take New Quiz</button>
+            <button class="button" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Achievement badges -->
+        <div class="achievements">
+            <h3>Your Achievements</h3>
+            <div class="badge-container">
+                <!-- Badges will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Progress charts -->
+        <div class="progress-charts">
+            <canvas id="subjectProgress"></canvas>
+            <canvas id="weeklyActivity"></canvas>
+        </div>
+
+        <!-- Learning streak -->
+        <div class="learning-streak">
+            <h3>Learning Streak</h3>
+            <div class="streak-calendar">
+                <!-- Calendar will be dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if user is logged in
+            const userId = sessionStorage.getItem('userId');
+            if (!userId) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Fetch user details
+            try {
+                const userResponse = await fetch(`http://localhost:3000/api/user/${userId}`);
+                if (userResponse.ok) {
+                    const userData = await userResponse.json();
+                    document.getElementById('username').textContent = userData.username;
+                    document.getElementById('userEmail').textContent = userData.email;
+                }
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+            }
+
+            // Fetch quiz history
+            try {
+                const historyResponse = await fetch(`http://localhost:3000/api/quiz-history/${userId}`);
+                if (historyResponse.ok) {
+                    const history = await historyResponse.json();
+                    displayHistory(history);
+                } else {
+                    console.error('Failed to fetch quiz history');
+                }
+            } catch (error) {
+                console.error('Error fetching quiz history:', error);
+            }
+        });
+
+        function displayHistory(history) {
+            const tableBody = document.getElementById('historyTableBody');
+            
+            if (!history || history.length === 0) {
+                document.getElementById('historyContent').innerHTML = 
+                    '<div class="no-history">No quiz history available</div>';
+                return;
+            }
+
+            tableBody.innerHTML = history.map(item => {
+                const percentage = (item.score / item.total_questions) * 100;
+                let scoreClass = 'score-low';
+                if (percentage >= 80) scoreClass = 'score-high';
+                else if (percentage >= 50) scoreClass = 'score-medium';
+
+                const date = new Date(item.completion_date);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+
+                // Parse career path if it exists
+                let careerPath = 'Not viewed';
+                try {
+                    if (item.career_path_shown) {
+                        const careerPathData = JSON.parse(item.career_path_shown);
+                        careerPath = `${careerPathData.career_title} (${careerPathData.level})`;
+                    }
+                } catch (e) {
+                    console.error('Error parsing career path:', e);
+                }
+
+                return `
+                    <tr>
+                        <td>${formattedDate}</td>
+                        <td>${item.subject}</td>
+                        <td>
+                            <span class="score-badge ${scoreClass}">
+                                ${item.score}/${item.total_questions} (${percentage.toFixed(1)}%)
+                            </span>
+                        </td>
+                        <td>${careerPath}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'auth.html';
+        }
+    </script>
+</body>
+</html>

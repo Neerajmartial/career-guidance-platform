@@ -1,0 +1,414 @@
+/* style.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+header {
+  background: #003366;
+  color: #fff;
+  padding: 1rem 0;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.auth-buttons button {
+  margin-left: 10px;
+  padding: 0.5rem 1rem;
+  background: #ff9900;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.intro-section, .features-section, .subjects-section, .testimonials-section, .test-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.intro-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+}
+
+.intro-text {
+  flex: 1;
+}
+
+.intro-image img {
+  max-width: 100%;
+  border-radius: 15px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.features-grid, .subjects-grid, .testimonials-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.feature-box, .subject-card, .testimonial {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 300px;
+  text-align: center;
+}
+
+.testimonial p {
+  font-style: italic;
+}
+
+.test-form {
+  max-width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.test-form label {
+  font-weight: bold;
+}
+
+.test-form input, .test-form select, .test-form button {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.test-form button {
+  background-color: #003366;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.site-footer {
+  background: #003366;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-content input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button {
+  background-color: #003366;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.popular-subjects {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.popular-subjects h2 {
+  color: #004080;
+  margin-bottom: 30px;
+}
+
+.subject-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.subject-card {
+  background-color: #ffffff;
+  padding: 20px;
+  width: 180px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.subject-card img {
+  width: 80%;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 8px 8px 0 0;
+}
+
+.subject-card h3 {
+  color: #333;
+}
+
+.subject-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+  display: none;
+}
+
+.show-more-container {
+  margin-top: 20px;
+}
+
+#showMoreBtn, #showLessBtn {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#showMoreBtn:hover, #showLessBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.show-toggle-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.subject-card.hidden {
+  display: none !important;
+}
+
+.subject-card.selected {
+  border: 2px solid #004080;
+  background-color: #eaf3ff;
+}
+
+#nextBtn1 {
+  padding: 10px 20px;
+  background-color: #004080;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none; /* make sure it's initially hidden */
+}
+
+#nextBtn1:hover {
+  background-color: #0066cc;
+}
+
+/* Animation for cards */
+.feature-box:hover, .subject-card:hover, .testimonial:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+/* Smooth transitions for buttons and elements */
+button, .subject-card, .modal-content {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Typography Responsive */
+@media (max-width: 768px) {
+  .intro-text h2, .section-title {
+    font-size: 1.75rem;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .auth-buttons {
+    margin-top: 10px;
+  }
+
+  .subject-card {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* Dark Mode Support */
+body.dark {
+  background-color: #111827;
+  color: #e5e7eb;
+}
+
+body.dark header,
+body.dark .site-footer {
+  background-color: #1f2937;
+  color: white;
+}
+
+body.dark .feature-box,
+body.dark .subject-card,
+body.dark .testimonial,
+body.dark .modal-content {
+  background-color: #1e293b;
+  color: #e5e7eb;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .subject-card.selected {
+  background-color: #1d4ed8;
+  border-color: #3b82f6;
+}
+
+body.dark #showMoreBtn,
+body.dark #showLessBtn,
+body.dark #takeTestBtn {
+  background-color: #3b82f6;
+}
+
+body.dark #showMoreBtn:hover,
+body.dark #showLessBtn:hover,
+body.dark #takeTestBtn:hover {
+  background-color: #2563eb;
+}
+
+/* Match size of login/signup buttons */
+/* Adjust size and style for a small, circular-rectangular toggle */
+.theme-toggle {
+  width: 50px;
+  height: 25px;
+  background-color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle input {
+  display: none;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: #003366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  color: white;
+  font-size: 16px;
+}
+
+/* Slide to right in dark mode */
+#themeSwitch:checked + .toggle-thumb {
+  transform: translateX(30px);
+  background-color: #f1c40f;
+  color: black;
+}
+
+body.dark .subject-card h3 {
+  color: #ffffff;
+}
+
+body.dark .subject-card {
+  background-color: #1f2937;
+  color: #e5e7eb;
+  border: 1px solid #374151;
+}
+
+
+
+

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz</title>
+  <link rel="stylesheet" href="quiz.css" />
+  <style>
+    .optionBtn {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f2f2f2;
+    }
+    .optionBtn.selected {
+      background-color: #007bff;
+      color: white;
+    }
+    #nextBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+    .timer-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #34495e;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .timer-warning {
+      background: #e74c3c;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-container" id="timer">
+    30:00
+  </div>
+
+  <div class="quiz-container">
+    <h1 id="quizTitle">Test - Subject</h1>
+
+    <div id="questionContainer">
+      <p id="questionText"></p>
+      <div id="options">
+        <button class="optionBtn" id="optionA" onclick="selectOption(this, 'A')"></button>
+        <button class="optionBtn" id="optionB" onclick="selectOption(this, 'B')"></button>
+        <button class="optionBtn" id="optionC" onclick="selectOption(this, 'C')"></button>
+        <button class="optionBtn" id="optionD" onclick="selectOption(this, 'D')"></button>
+      </div>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOption = null;
+    let timeLeft = 30 * 60; // 30 minutes in seconds
+    let timerInterval;
+
+    const optionButtons = {
+      A: document.getElementById("optionA"),
+      B: document.getElementById("optionB"),
+      C: document.getElementById("optionC"),
+      D: document.getElementById("optionD")
+    };
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          autoSubmitQuiz();
+        } else if (timeLeft <= 300) { // 5 minutes left
+          document.getElementById('timer').classList.add('timer-warning');
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('timer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function autoSubmitQuiz() {
+      // Get subject from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const subject = urlParams.get('subject');
+      
+      // Store quiz results
+      sessionStorage.setItem('score', score);
+      sessionStorage.setItem('total', questions.length);
+      sessionStorage.setItem('selectedSubject', subject);
+      
+      console.log('Quiz auto-submitted:', {
+        score: score,
+        total: questions.length,
+        subject: subject
+      });
+
+      // Save quiz result to database
+      saveQuizResult(score, questions.length, subject, null);
+
+      // Redirect to results page
+      window.location.href = 'results.html';
+    }
+
+    function selectOption(button, optionKey) {
+      selectedOption = optionKey;
+      Object.values(optionButtons).forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+    }
+
+    function displayNextQuestion() {
+      if (selectedOption === null && currentQuestionIndex !== 0) {
+        alert("Please select an option before continuing.");
+        return;
+      }
+
+      // Check previous question's answer
+      if (currentQuestionIndex > 0) {
+        const prevQuestion = questions[currentQuestionIndex - 1];
+        if (selectedOption === prevQuestion.correct_option) {
+          score++;
+        }
+      }
+
+      if (currentQuestionIndex >= questions.length) {
+        autoSubmitQuiz();
+        return;
+      }
+
+      // Reset selection
+      selectedOption = null;
+      Object.values(optionButtons).forEach(btn => btn.classList.remove('selected'));
+
+      // Show current question
+      const q = questions[currentQuestionIndex];
+      document.getElementById('questionText').innerText = `${currentQuestionIndex + 1}. ${q.question_text}`;
+      optionButtons.A.innerText = q.option_a;
+      optionButtons.B.innerText = q.option_b;
+      optionButtons.C.innerText = q.option_c;
+      optionButtons.D.innerText = q.option_d;
+
+      currentQuestionIndex++;
+    }
+
+    async function loadQuestions() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const subject = urlParams.get('subject');
+        console.log('Loading questions for subject:', subject);
+
+        if (!subject) {
+          console.error('No subject provided in URL');
+          document.getElementById('quiz-container').innerHTML = '<p>Error: No subject selected</p>';
+          return;
+        }
+
+        document.getElementById('quizTitle').innerText = `Test - ${subject}`;
+
+        const response = await fetch(`http://localhost:3000/api/questions/${subject}`);
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions');
+        }
+
+        questions = await response.json();
+        console.log('Loaded questions:', questions.length);
+
+        if (!questions || questions.length === 0) {
+          throw new Error('No questions available');
+        }
+
+        displayNextQuestion();
+        startTimer(); // Start the timer after questions are loaded
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('quiz-container').innerHTML = `
+          <p>Error loading questions: ${error.message}</p>
+          <button onclick="window.location.href='mainweb.html'">Return to Home</button>
+        `;
+      }
+    }
+
+    async function saveQuizResult(score, total, subject, careerPath) {
+      const userId = sessionStorage.getItem('userId');
+      if (!userId) return;
+
+      try {
+        await fetch('http://localhost:3000/api/save-quiz-result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            subject,
+            score,
+            totalQuestions: total,
+            careerPath
+          })
+        });
+      } catch (error) {
+        console.error('Error saving quiz result:', error);
+      }
+    }
+
+    // Initialize the quiz
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if user is logged in
+      if (!sessionStorage.getItem('userId')) {
+        window.location.href = 'auth.html';
+        return;
+      }
+      loadQuestions();
+      document.getElementById("nextBtn").addEventListener("click", displayNextQuestion);
+    });
+  </script>
+</body>
+</html>

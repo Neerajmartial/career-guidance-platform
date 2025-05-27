@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            position: relative;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .image-container {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5') center/cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .image-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(118, 75, 162, 0.8);
+        }
+
+        .image-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .image-content h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .image-content p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .switch-form {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .switch-form:hover {
+            background: white;
+            color: #764ba2;
+        }
+
+        .form-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: none;
+            background: #f5f6fa;
+            border-radius: 10px;
+            font-size: 1em;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            background: white;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .remember-forgot label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .remember-forgot input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .remember-forgot a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-icons button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: #f5f6fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icons button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-icons i {
+            font-size: 1.2em;
+        }
+
+        .social-icons .google i {
+            color: #DB4437;
+        }
+
+        .social-icons .github i {
+            color: #333;
+        }
+
+        .social-icons .linkedin i {
+            color: #0077B5;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            background: #fde8e8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column-reverse;
+                max-width: 400px;
+            }
+
+            .image-container {
+                min-height: 200px;
+                padding: 20px;
+            }
+
+            .image-content h2 {
+                font-size: 1.8em;
+            }
+
+            .form-container {
+                padding: 30px;
+            }
+        }
+
+        .login-form, .signup-form {
+            display: none;
+        }
+
+        .login-form.active, .signup-form.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container" id="formContainer">
+            <!-- Login Form -->
+            <div class="login-form active">
+                <h2 class="form-title">Welcome Back</h2>
+                <div id="loginError" class="error-message"></div>
+                <form onsubmit="return handleLogin(event)">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+                    <div class="remember-forgot">
+                        <label>
+                            <input type="checkbox" id="rememberMe">
+                            Remember me
+                        </label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                <div class="social-login">
+                    <p>Or login with</p>
+                    <div class="social-icons">
+                        <button class="google"><i class="fab fa-google"></i></button>
+                        <button class="github"><i class="fab fa-github"></i></button>
+                        <button class="linkedin"><i class="fab fa-linkedin-in"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="signup-form">
+                <h2 class="form-title">Create Account</h2>
+                <div id="signupError" class="error-message"></div>
+                <form onsubmit="return handleSignup(event)">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="signupName" placeholder="Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="Password" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign Up</button>
+                </form>
+                <div class="social-login">
+                    <p>Or sign up with</p>
+                    <div class="social-icons">
+                        <button class="google"><i class="fab fa-google"></i></button>
+                        <button class="github"><i class="fab fa-github"></i></button>
+                        <button class="linkedin"><i class="fab fa-linkedin-in"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-container">
+            <div class="image-content" id="sideContent">
+                <h2>New Here?</h2>
+                <p>Join us and start your learning journey today! Create an account to track your progress and get personalized recommendations.</p>
+                <button class="switch-form" onclick="toggleForm('signup')">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm(type) {
+            const loginForm = document.querySelector('.login-form');
+            const signupForm = document.querySelector('.signup-form');
+            const sideContent = document.getElementById('sideContent');
+
+            if (type === 'signup') {
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
+                sideContent.innerHTML = `
+                    <h2>Welcome Back!</h2>
+                    <p>Already have an account? Login to continue your learning journey and track your progress.</p>
+                    <button class="switch-form" onclick="toggleForm('login')">Login</button>
+                `;
+            } else {
+                signupForm.classList.remove('active');
+                loginForm.classList.add('active');
+                sideContent.innerHTML = `
+                    <h2>New Here?</h2>
+                    <p>Join us and start your learning journey today! Create an account to track your progress and get personalized recommendations.</p>
+                    <button class="switch-form" onclick="toggleForm('signup')">Sign Up</button>
+                `;
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    sessionStorage.setItem('userId', data.userId);
+                    sessionStorage.setItem('username', data.username);
+                    window.location.href = 'mainweb.html';
+                } else {
+                    showError('loginError', data.error || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('loginError', 'Login failed. Please try again.');
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showError('signupError', 'Passwords do not match');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Account created successfully! Please login.');
+                    toggleForm('login');
+                } else {
+                    showError('signupError', data.error || 'Signup failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('signupError', 'Signup failed. Please try again.');
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = message;
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

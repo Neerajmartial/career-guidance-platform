@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Results</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #e3fdf5, #ffe6fa);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .result-container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+      border: 2px solid #ddd;
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .score-box {
+      background: #34495e;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 1.5em;
+    }
+
+    .percentage-text {
+      text-align: center;
+      font-size: 1.2em;
+      color: #2c3e50;
+      margin: 15px 0;
+    }
+
+    .button-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1em;
+      margin: 10px;
+      transition: background 0.3s;
+    }
+
+    .button:hover {
+      background: #2980b9;
+    }
+
+    .career-path-container {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .career-path-content {
+      margin-top: 15px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      text-align: center;
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #fde8e8;
+      border-radius: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="result-container">
+    <h1>Quiz Results</h1>
+
+    <div id="scoreBox" class="score-box"></div>
+    <div id="percentageText" class="percentage-text"></div>
+
+    <div class="button-container">
+      <button class="button" onclick="goToMainQuiz()">Take Another Quiz</button>
+      <button class="button" id="showCareerPathBtn">Show Career Path</button>
+    </div>
+
+    <div id="loading" class="loading">Loading career path...</div>
+    <div id="errorMessage" class="error-message"></div>
+    
+    <div id="careerPathContainer" class="career-path-container">
+      <h2>Recommended Career Path</h2>
+      <div id="careerPathContent" class="career-path-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // Display initial results when page loads
+    window.onload = function() {
+      const score = sessionStorage.getItem('score');
+      const total = sessionStorage.getItem('total');
+      const subject = sessionStorage.getItem('selectedSubject');
+
+      console.log('Retrieved from session:', { score, total, subject });
+
+      if (score !== null && total !== null) {
+        const percentage = (parseInt(score) / parseInt(total)) * 100;
+        document.getElementById('scoreBox').innerHTML = `
+          Score: ${score} out of ${total}<br>
+          Subject: ${subject}
+        `;
+        document.getElementById('percentageText').innerHTML = 
+          `Percentage: ${percentage.toFixed(2)}%`;
+      } else {
+        document.getElementById('scoreBox').innerText = "No quiz results available";
+        document.getElementById('percentageText').innerText = "";
+      }
+    };
+
+    function goToMainQuiz() {
+      window.location.href = 'mainweb.html';
+    }
+
+    document.getElementById('showCareerPathBtn').addEventListener('click', function() {
+      window.location.href = 'career-path.html';
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is logged in
+      if (!sessionStorage.getItem('userId')) {
+        window.location.href = 'auth.html';
+        return;
+      }
+    });
+  </script>
+</body>
+</html>

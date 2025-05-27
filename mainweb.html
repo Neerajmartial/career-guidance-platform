@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Path Finder</title>
+  <link rel="stylesheet" href="mainweb.css" />
+  <style>
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .auth-buttons button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #loginBtn, #signupBtn {
+      background-color: #ff9900;
+      color: white;
+    }
+
+    #profileBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #logoutBtn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .auth-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .auth-message button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+    }
+
+    .auth-message .login-btn {
+      background-color: #4CAF50;
+    }
+
+    .auth-message .signup-btn {
+      background-color: #2196F3;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    .subject-card img {
+      width: 80%;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .subject-icon-bg {
+      background: #22325a;
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      margin: 0 auto 12px auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .subject-icon-bg img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section with Login/Signup Button -->
+  <header>
+    <div class="container header-container">
+      <h1>Career Path Finder</h1>
+      <div class="auth-buttons">
+        <button id="profileBtn" style="display: none;">Profile</button>
+        <button id="loginBtn">Login</button>
+        <button id="signupBtn">Sign Up</button>
+        <button id="logoutBtn" style="display: none;">Logout</button>
+        <label class="theme-toggle" for="themeSwitch">
+          <input type="checkbox" id="themeSwitch" />
+          <span class="toggle-thumb">
+            <span id="themeIcon">🌙</span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth message overlay -->
+  <div id="overlay" class="overlay"></div>
+  <div id="authMessage" class="auth-message" style="display: none;">
+    <h2>Please Login or Sign Up</h2>
+    <p>You need to be logged in to access this feature.</p>
+    <button class="login-btn" onclick="window.location.href='auth.html'">Login</button>
+    <button class="signup-btn" onclick="window.location.href='auth.html#signup'">Sign Up</button>
+  </div>
+
+  <!-- Intro Section -->
+  <section class="intro-section">
+    
+    <div class="intro-text">
+      <h4>DISCOVER YOUR PATH</h4>
+      <h2>Find careers that match your interests</h2>
+      <p>
+        At Passion to Profession, we empower individuals to explore career options tailored to their unique interests and strengths.
+        Our innovative platform offers a subject-specific test designed to assess your knowledge level,
+        guiding you towards fulfilling career paths. Based in Hyderabad, India, we are dedicated to helping you
+        transform your passions into successful professions. Start your journey today and unlock your potential!
+      </p>
+    </div>
+    <div class="intro-image">
+      <img src="images/art-pencils.png" alt="Art supplies" style="width: 100%; height: auto; max-height: 400px; object-fit: cover; border-radius: 8px;" />
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <h2 class="section-title">How It Works</h2>
+    <div class="features-grid">
+      <div class="feature-box">
+        <img src="images/step1.png" alt="Step 1">
+        <h3>Choose a Subject</h3>
+        <p>Select a subject that interests you the most. We have options like Math, Science, Art, and more.</p>
+      </div>
+      <div class="feature-box">
+        <img src="images/step2.png" alt="Step 2">
+        <h3>Take the Quiz</h3>
+        <p>We assess your level of understanding through a progressively challenging quiz in your chosen subject.</p>
+      </div>
+      <div class="feature-box">
+        <img src="images/step3.png" alt="Step 3">
+        <h3>Get Career Suggestions</h3>
+        <p>Based on your performance, we suggest career paths, degrees, and certifications aligned with your interest.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subjects Section -->
+  <section class="popular-subjects">
+    <h2>Popular Subjects</h2>
+    <div class="subject-grid" id="subjectGrid">
+      <!-- Visible cards initially -->
+      <div class="subject-card" data-subject="Chemistry">
+        <img src="https://img.freepik.com/free-vector/atom-illustration-model-with-electrons-neutron-isolated_1284-53084.jpg?semt=ais_hybrid&w=740" alt="Chemistry">
+        <h3>Chemistry</h3>
+      </div>
+      <div class="subject-card" data-subject="Art">
+        <img src="https://img.freepik.com/premium-vector/art-class-illustration_158757-606.jpg?w=1380" alt="Art">
+        <h3>Art</h3>
+      </div>
+      <div class="subject-card" data-subject="Business">
+        <img src="https://img.freepik.com/free-vector/gradient-mba-illustration_23-2149350374.jpg?t=st=1745915665~exp=1745919265~hmac=8a4105e18062205e4d47cd0e2175ae79d0323bd72fe7c0559ab52c2c14e6e707&w=900" alt="Business">
+        <h3>Business</h3>
+      </div>
+
+      <!-- Hidden cards initially -->
+      <div class="subject-card hidden" data-subject="Math">
+        <img src="https://img.freepik.com/premium-vector/mathematics-education-school-lesson-concept-textbook-notebook-with-writings-calculator-pen-compass-around-green-chalkboard-with-tasks-math-formulas-cartoon_1016-3408.jpg?w=1380"  alt="Math">
+        <h3>Math</h3>
+      </div>
+      <div class="subject-card hidden" data-subject="History">
+        <img src="https://img.freepik.com/premium-vector/idea-science-education_277904-8664.jpg?w=1380" alt="History">
+        <h3>History</h3>
+      </div>
+      <div class="subject-card hidden" data-subject="Commerce">
+        <img src="https://img.freepik.com/free-vector/tiny-students-sitting-near-books-getting-university-degree-paying-money-education-business-flat-vector-illustration-college-scholarship-finance-system-school-fee-economy-student-loan-concept_74855-21037.jpg?t=st=1745684880~exp=1745688480~hmac=90ad732c6c050bba23a862eb52c69fd83d1f4450c67516b3252f382fb3877fa2&w=1060" alt="Commerce">
+        <h3>Commerce</h3>
+      </div>
+      <div class="subject-card hidden" data-subject="Technology">
+        <img src="https://img.freepik.com/free-vector/laptop-with-stem-education-map-cartoon-style-isolated-white-background_1308-46540.jpg?t=st=1745684816~exp=1745688416~hmac=0ed7d4145a4e9c6a3f983baa642de39af57a5ff3cc16ed189aaaab7c9b225d70&w=996"  alt="Technology">
+        <h3>Technology</h3>
+      </div>
+    </div>
+    <div class="show-toggle-container">
+      <button id="showMoreBtn">Show More</button>
+      <button id="showLessBtn" style="display: none;">Show Less</button>
+    </div>
+  </section>
+  
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <h2 class="section-title">What Students Say</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p>"This platform helped me discover a career in animation that I never considered before. Highly recommend it!"</p>
+        <h5>- Priya S, 12th Grade</h5>
+      </div>
+      <div class="testimonial">
+        <p>"I always loved biology, but didn't know what to pursue. The quiz gave me clear direction. Thank you!"</p>
+        <h5>- Rahul M, 10th Grade</h5>
+      </div>
+      <div class="testimonial">
+        <p>"Great experience! The suggestions were spot on and I found courses that match my interest in AI."</p>
+        <h5>- Neha T, College Student</h5>
+      </div>
+    </div>
+  </section>
+
+  <!-- Test Page Section -->
+ 
+
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p>&copy; 2025 Career Path Finder. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#test">Test</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  
+
+  <!-- Quick stats dashboard -->
+
+
+
+  <script src="mainweb.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const userId = sessionStorage.getItem('userId');
+      const profileBtn = document.getElementById('profileBtn');
+      const loginBtn = document.getElementById('loginBtn');
+      const signupBtn = document.getElementById('signupBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const overlay = document.getElementById('overlay');
+      const authMessage = document.getElementById('authMessage');
+
+      // Update button visibility based on login status
+      function updateAuthButtons() {
+        if (sessionStorage.getItem('userId')) {
+          profileBtn.style.display = 'inline-block';
+          logoutBtn.style.display = 'inline-block';
+          loginBtn.style.display = 'none';
+          signupBtn.style.display = 'none';
+        } else {
+          profileBtn.style.display = 'none';
+          logoutBtn.style.display = 'none';
+          loginBtn.style.display = 'inline-block';
+          signupBtn.style.display = 'inline-block';
+        }
+      }
+
+      // Show auth message
+      function showAuthMessage() {
+        overlay.style.display = 'block';
+        authMessage.style.display = 'block';
+      }
+
+      // Hide auth message
+      function hideAuthMessage() {
+        overlay.style.display = 'none';
+        authMessage.style.display = 'none';
+      }
+
+      // Check auth before allowing actions
+      function checkAuth(event) {
+        if (!sessionStorage.getItem('userId')) {
+          event.preventDefault();
+          showAuthMessage();
+          return false;
+        }
+        return true;
+      }
+
+      // Add click handlers
+      loginBtn.addEventListener('click', () => window.location.href = 'auth.html');
+      signupBtn.addEventListener('click', () => window.location.href = 'auth.html#signup');
+      profileBtn.addEventListener('click', () => window.location.href = 'profile.html');
+      logoutBtn.addEventListener('click', () => {
+        sessionStorage.clear();
+        updateAuthButtons();
+        window.location.reload();
+      });
+
+      // Add auth check to all subject cards
+      document.querySelectorAll('.subject-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (!checkAuth(e)) {
+            return;
+          }
+          // Your existing subject card click handler
+        });
+      });
+
+      // Add auth check to start test button
+      const startTestBtn = document.getElementById('startTestBtn');
+      if (startTestBtn) {
+        startTestBtn.addEventListener('click', (e) => {
+          if (!checkAuth(e)) {
+            return;
+          }
+          // Your existing start test handler
+        });
+      }
+
+      // Initialize auth buttons
+      updateAuthButtons();
+    });
+  </script>
+</body>
+</html>
