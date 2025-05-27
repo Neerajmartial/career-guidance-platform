@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Career Path</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #2c3e50;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .score-summary {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .score-box {
+      background: #34495e;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 1.2em;
+    }
+
+    .career-path-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .career-title {
+      color: #2c3e50;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #3498db;
+    }
+
+    .career-description {
+      color: #666;
+      line-height: 1.6;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+
+    .level-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #3498db;
+      color: white;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    .suggestions-container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+
+    .suggestion-item {
+      display: flex;
+      align-items: start;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 10px;
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .suggestion-icon {
+      font-size: 24px;
+      margin-right: 15px;
+      color: #3498db;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .suggestion-content {
+      flex: 1;
+    }
+
+    .suggestion-content h3 {
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .suggestion-content p {
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 25px;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+
+    .button:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .button.secondary {
+      background: #95a5a6;
+    }
+
+    .button.secondary:hover {
+      background: #7f8c8d;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .career-title {
+        font-size: 1.5em;
+      }
+
+      .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .button {
+        width: 100%;
+        margin: 5px 0;
+      }
+
+      .suggestion-item {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .suggestion-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Your Career Path</h1>
+      <p>Based on your quiz performance</p>
+    </div>
+
+    <div class="score-summary">
+      <h2>Quiz Results</h2>
+      <div class="score-box">
+        <div id="scoreText">Loading score...</div>
+        <div id="percentageText"></div>
+      </div>
+    </div>
+
+    <div class="career-path-card">
+      <h2 class="career-title" id="careerTitle">Loading...</h2>
+      <p class="career-description" id="careerDescription"></p>
+      <span class="level-badge" id="levelBadge"></span>
+    </div>
+
+    <div class="suggestions-container">
+      <h2>Suggested Next Steps</h2>
+      <div id="suggestionsList">
+        <!-- Suggestions will be populated here -->
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="button" onclick="window.location.href='mainweb.html'">Take Another Quiz</button>
+      <button class="button secondary" onclick="window.print()">Print Results</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is logged in
+      const userId = sessionStorage.getItem('userId');
+      if (!userId) {
+        window.location.href = 'auth.html';
+        return;
+      }
+
+      // Display score
+      const score = sessionStorage.getItem('score');
+      const total = sessionStorage.getItem('total');
+      const subject = sessionStorage.getItem('selectedSubject');
+
+      if (score !== null && total !== null) {
+        const percentage = (parseInt(score) / parseInt(total)) * 100;
+        document.getElementById('scoreText').innerHTML = 
+          `Score: ${score}/${total}<br>Subject: ${subject}`;
+        document.getElementById('percentageText').innerHTML = 
+          `${percentage.toFixed(2)}%`;
+
+        // Determine level
+        let level;
+        if (percentage >= 80) {
+          level = 'Advanced';
+        } else if (percentage >= 50) {
+          level = 'Intermediate';
+        } else {
+          level = 'Beginner';
+        }
+
+        // Fetch career path
+        fetchCareerPath(subject, level);
+      } else {
+        document.getElementById('scoreText').innerText = "No quiz results available";
+      }
+    });
+
+    function displaySuggestions(level, subject) {
+      const suggestionsList = document.getElementById('suggestionsList');
+      const suggestions = getSuggestions(level, subject);
+      
+      suggestionsList.innerHTML = suggestions.map(suggestion => `
+        <div class="suggestion-item">
+          <div class="suggestion-icon">${suggestion.icon}</div>
+          <div class="suggestion-content">
+            <h3>${suggestion.title}</h3>
+            <p>${suggestion.description}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getSuggestions(level, subject) {
+      const suggestions = {
+        Beginner: [
+          {
+            icon: "📚",
+            title: "Start with Fundamentals",
+            description: `Begin with basic ${subject} concepts and practice regularly. Focus on understanding core principles.`
+          },
+          {
+            icon: "💻",
+            title: "Hands-on Practice",
+            description: "Complete small projects to apply what you've learned. Start with guided tutorials."
+          },
+          {
+            icon: "👥",
+            title: "Join Learning Communities",
+            description: "Connect with other learners through online forums and study groups."
+          }
+        ],
+        Intermediate: [
+          {
+            icon: "🚀",
+            title: "Build Real Projects",
+            description: "Create portfolio projects that showcase your growing skills."
+          },
+          {
+            icon: "📝",
+            title: "Get Certified",
+            description: `Pursue relevant certifications in ${subject} to validate your knowledge.`
+          },
+          {
+            icon: "🤝",
+            title: "Network with Professionals",
+            description: "Attend meetups and connect with experienced developers."
+          }
+        ],
+        Advanced: [
+          {
+            icon: "🎓",
+            title: "Specialize Your Skills",
+            description: `Focus on advanced ${subject} topics and specific frameworks.`
+          },
+          {
+            icon: "👨‍🏫",
+            title: "Mentor Others",
+            description: "Share your knowledge by mentoring beginners and contributing to the community."
+          },
+          {
+            icon: "🌟",
+            title: "Industry Involvement",
+            description: "Contribute to open source projects and attend tech conferences."
+          }
+        ]
+      };
+
+      return suggestions[level] || suggestions['Beginner'];
+    }
+
+    async function fetchCareerPath(subject, level) {
+      console.log('Fetching career path for:', { subject, level });
+      try {
+        const response = await fetch('http://localhost:3000/api/get-career-path', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            subject,
+            level
+          })
+        });
+
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error response:', errorData);
+          throw new Error(errorData.error || 'Failed to fetch career path');
+        }
+
+        const careerPaths = await response.json();
+        console.log('Received career paths:', careerPaths);
+        
+        if (careerPaths.length === 0) {
+          console.log('No career paths found for:', { subject, level });
+          document.getElementById('careerTitle').textContent = 'No Career Path Found';
+          document.getElementById('careerDescription').textContent = 
+            `No career path found for ${subject} at ${level} level.`;
+          return;
+        }
+
+        // Display the first career path
+        const careerPath = careerPaths[0];
+        console.log('Displaying career path:', careerPath);
+        document.getElementById('careerTitle').textContent = careerPath.career_title;
+        document.getElementById('careerDescription').textContent = careerPath.path_description;
+        document.getElementById('levelBadge').textContent = `Level: ${careerPath.level}`;
+
+        // Display suggestions based on the level
+        displaySuggestions(level, subject);
+
+      } catch (error) {
+        console.error('Error fetching career path:', error);
+        document.getElementById('careerTitle').textContent = 'Error Loading Career Path';
+        document.getElementById('careerDescription').textContent = 
+          'There was an error loading your career path. Please try again later.';
+      }
+    }
+  </script>
+</body>
+</html>
